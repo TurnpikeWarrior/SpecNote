@@ -1,0 +1,71 @@
+{
+  "name": "specnote",
+  "productName": "SpecNote",
+  "version": "1.0.0",
+  "description": "Keyboard-First Pageless RTF Editor with Split View",
+  "main": "electron/main.js",
+  "author": {
+    "name": "SpecNote Team"
+  },
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"vite\" \"wait-on http://localhost:5173 && electron . --developer\"",
+    "electron:build": "vite build && electron-builder",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@tiptap/extension-color": "^2.10.4",
+    "@tiptap/extension-font-family": "^2.10.4",
+    "@tiptap/extension-highlight": "^2.10.4",
+    "@tiptap/extension-placeholder": "^2.10.4",
+    "@tiptap/extension-text-align": "^2.10.4",
+    "@tiptap/extension-text-style": "^2.10.4",
+    "@tiptap/extension-underline": "^2.10.4",
+    "@tiptap/pm": "^2.10.4",
+    "@tiptap/react": "^2.10.4",
+    "@tiptap/starter-kit": "^2.10.4",
+    "cmdk": "^1.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "turndown": "^7.2.0",
+    "uuid": "^11.0.3"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "electron": "^35.0.0",
+    "electron-builder": "^25.1.8",
+    "vite": "^6.0.3",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.specnote.app",
+    "productName": "SpecNote",
+    "copyright": "Copyright © 2024 SpecNote",
+    "directories": {
+      "buildResources": "src/assets/build",
+      "output": "dist"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": ["dmg", "zip"]
+    },
+    "win": {
+      "target": ["nsis", "portable"]
+    },
+    "linux": {
+      "category": "Office",
+      "target": ["AppImage", "deb"]
+    }
+  }
+}
