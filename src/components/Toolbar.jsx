@@ -186,8 +186,9 @@ function Toolbar({ editor, splitMode, scrollSync, onToggleSplit, onToggleScrollS
             title={`Text Color: ${name}`}
             style={{ 
               backgroundColor: color,
-              width: '20px',
-              height: '20px',
+              width: '16px',
+              height: '16px',
+              minWidth: '16px',
               borderRadius: '3px',
               border: color === '#ffffff' ? '1px solid #ccc' : '1px solid var(--border-primary)',
             }}
