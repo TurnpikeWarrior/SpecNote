@@ -162,6 +162,7 @@ input:focus, select:focus {
   align-items: center;
   justify-content: space-between;
   padding: 8px 16px;
+  padding-left: 80px; /* Space for macOS traffic lights */
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-primary);
   -webkit-app-region: drag;

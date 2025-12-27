@@ -1,8 +1,11 @@
-const { app, BrowserWindow, screen, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, screen, ipcMain, dialog, Menu } = require('electron')
 const path = require('path')
 const fs = require('fs')
 
 const isDev = process.argv.includes('--developer') || !app.isPackaged
+
+// Set app name for macOS menu bar
+app.setName('SpecNote')
 
 let mainWindow = null
 
@@ -39,6 +42,82 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // Set up macOS application menu with correct app name
+  if (process.platform === 'darwin') {
+    const template = [
+      {
+        label: 'SpecNote',
+        submenu: [
+          { role: 'about', label: 'About SpecNote' },
+          { type: 'separator' },
+          { role: 'services' },
+          { type: 'separator' },
+          { role: 'hide', label: 'Hide SpecNote' },
+          { role: 'hideOthers' },
+          { role: 'unhide' },
+          { type: 'separator' },
+          { role: 'quit', label: 'Quit SpecNote' }
+        ]
+      },
+      {
+        label: 'File',
+        submenu: [
+          { label: 'New', accelerator: 'CmdOrCtrl+N', click: () => mainWindow?.webContents.send('menu-new') },
+          { label: 'Open...', accelerator: 'CmdOrCtrl+O', click: () => mainWindow?.webContents.send('menu-open') },
+          { type: 'separator' },
+          { label: 'Save', accelerator: 'CmdOrCtrl+S', click: () => mainWindow?.webContents.send('menu-save') },
+          { type: 'separator' },
+          { label: 'Export as Markdown...', accelerator: 'CmdOrCtrl+Shift+M', click: () => mainWindow?.webContents.send('menu-export-md') },
+          { label: 'Export as Plain Text...', accelerator: 'CmdOrCtrl+Shift+T', click: () => mainWindow?.webContents.send('menu-export-txt') },
+        ]
+      },
+      {
+        label: 'Edit',
+        submenu: [
+          { role: 'undo' },
+          { role: 'redo' },
+          { type: 'separator' },
+          { role: 'cut' },
+          { role: 'copy' },
+          { role: 'paste' },
+          { role: 'selectAll' }
+        ]
+      },
+      {
+        label: 'View',
+        submenu: [
+          { label: 'Toggle Split View', accelerator: 'CmdOrCtrl+\\', click: () => mainWindow?.webContents.send('menu-toggle-split') },
+          { type: 'separator' },
+          { role: 'reload' },
+          { role: 'toggleDevTools' },
+          { type: 'separator' },
+          { role: 'resetZoom' },
+          { role: 'zoomIn' },
+          { role: 'zoomOut' },
+          { type: 'separator' },
+          { role: 'togglefullscreen' }
+        ]
+      },
+      {
+        label: 'Window',
+        submenu: [
+          { role: 'minimize' },
+          { role: 'zoom' },
+          { type: 'separator' },
+          { role: 'front' }
+        ]
+      },
+      {
+        label: 'Help',
+        submenu: [
+          { label: 'Keyboard Shortcuts', accelerator: 'CmdOrCtrl+/', click: () => mainWindow?.webContents.send('menu-shortcuts') }
+        ]
+      }
+    ]
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
+  }
+
   createWindow()
 
   app.on('activate', () => {
