@@ -117,18 +117,25 @@ function App() {
     { id: 'settings', label: 'Settings', shortcut: ['⌘', ','], action: () => setSettingsOpen(true), icon: 'settings' },
   ]
 
-  const getActiveEditor = useCallback(() => {
-    if (activePane === 'left') return leftEditorRef.current?.editor
-    return rightEditorRef.current?.editor
+  // Returns TipTap editor instance for direct commands
+  const getActiveEditorInstance = useCallback(() => {
+    if (activePane === 'left') return leftEditorRef.current?.getEditor?.()
+    return rightEditorRef.current?.getEditor?.()
+  }, [activePane])
+
+  // Returns editor ref for toolbar methods (setColor, setFontFamily, etc.)
+  const getActiveEditorRef = useCallback(() => {
+    if (activePane === 'left') return leftEditorRef.current
+    return rightEditorRef.current
   }, [activePane])
 
   const handleIndentList = useCallback(() => {
-    getActiveEditor()?.chain().focus().sinkListItem('listItem').run()
-  }, [getActiveEditor])
+    getActiveEditorInstance()?.chain().focus().sinkListItem('listItem').run()
+  }, [getActiveEditorInstance])
 
   const handleUnindentList = useCallback(() => {
-    getActiveEditor()?.chain().focus().liftListItem('listItem').run()
-  }, [getActiveEditor])
+    getActiveEditorInstance()?.chain().focus().liftListItem('listItem').run()
+  }, [getActiveEditorInstance])
 
   useKeyboardShortcuts({
     onSave: handleSave,
@@ -162,16 +169,16 @@ function App() {
     api.onSetLineSpacing?.((value) => updateSettings({ lineSpacing: value }))
     
     // Format commands - apply to active editor
-    api.onFormatBold?.(() => getActiveEditor()?.chain().focus().toggleBold().run())
-    api.onFormatItalic?.(() => getActiveEditor()?.chain().focus().toggleItalic().run())
-    api.onFormatUnderline?.(() => getActiveEditor()?.chain().focus().toggleUnderline().run())
-    api.onFormatHeading?.((level) => getActiveEditor()?.chain().focus().toggleHeading({ level }).run())
-    api.onFormatParagraph?.(() => getActiveEditor()?.chain().focus().setParagraph().run())
-    api.onFormatBulletList?.(() => getActiveEditor()?.chain().focus().toggleBulletList().run())
-    api.onFormatNumberedList?.(() => getActiveEditor()?.chain().focus().toggleOrderedList().run())
-    api.onFormatIndentList?.(() => getActiveEditor()?.chain().focus().sinkListItem('listItem').run())
-    api.onFormatUnindentList?.(() => getActiveEditor()?.chain().focus().liftListItem('listItem').run())
-  }, [activePane, handleNewDocument, handleOpenDocument, handleSave, handleExportMd, handleExportTxt, toggleSplitView, updateSettings, getActiveEditor])
+    api.onFormatBold?.(() => getActiveEditorInstance()?.chain().focus().toggleBold().run())
+    api.onFormatItalic?.(() => getActiveEditorInstance()?.chain().focus().toggleItalic().run())
+    api.onFormatUnderline?.(() => getActiveEditorInstance()?.chain().focus().toggleUnderline().run())
+    api.onFormatHeading?.((level) => getActiveEditorInstance()?.chain().focus().toggleHeading({ level }).run())
+    api.onFormatParagraph?.(() => getActiveEditorInstance()?.chain().focus().setParagraph().run())
+    api.onFormatBulletList?.(() => getActiveEditorInstance()?.chain().focus().toggleBulletList().run())
+    api.onFormatNumberedList?.(() => getActiveEditorInstance()?.chain().focus().toggleOrderedList().run())
+    api.onFormatIndentList?.(() => getActiveEditorInstance()?.chain().focus().sinkListItem('listItem').run())
+    api.onFormatUnindentList?.(() => getActiveEditorInstance()?.chain().focus().liftListItem('listItem').run())
+  }, [activePane, handleNewDocument, handleOpenDocument, handleSave, handleExportMd, handleExportTxt, toggleSplitView, updateSettings, getActiveEditorInstance])
 
   return (
     <div className="app">
@@ -202,7 +209,7 @@ function App() {
       </header>
 
       <Toolbar 
-        editor={getActiveEditor()} 
+        editor={getActiveEditorRef()} 
         splitMode={splitMode}
         scrollSync={scrollSync}
         onToggleSplit={toggleSplitView}
@@ -243,9 +250,6 @@ function App() {
         />
       )}
 
-      <div className="keyboard-hint">
-        <kbd>⌘</kbd><kbd>K</kbd> Command Palette
-      </div>
     </div>
   )
 }

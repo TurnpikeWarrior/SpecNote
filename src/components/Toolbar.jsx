@@ -21,23 +21,22 @@ const FONT_SIZES = [
 ]
 
 const COLORS = [
-  '#1a1a1a',
-  '#dc2626',
-  '#ea580c',
-  '#ca8a04',
-  '#16a34a',
-  '#0891b2',
-  '#2563eb',
-  '#7c3aed',
-  '#db2777',
+  { color: '#000000', name: 'Black' },
+  { color: '#ffffff', name: 'White' },
+  { color: '#2563eb', name: 'Blue' },
+  { color: '#dc2626', name: 'Red' },
+  { color: '#16a34a', name: 'Green' },
 ]
 
 function Toolbar({ editor, splitMode, scrollSync, onToggleSplit, onToggleScrollSync }) {
+  // editor is the ref object with methods like setColor, toggleBold, etc.
   const editorInstance = editor?.getEditor?.()
 
   const isActive = (type, attrs = {}) => {
     return editorInstance?.isActive(type, attrs) || false
   }
+
+  if (!editor) return null
 
   const handleFontFamily = (e) => {
     editor?.setFontFamily(e.target.value)
@@ -181,18 +180,18 @@ function Toolbar({ editor, splitMode, scrollSync, onToggleSplit, onToggleScrollS
 
       {/* Colors */}
       <div className="toolbar-group color-picker">
-        {COLORS.map(color => (
+        {COLORS.map(({ color, name }) => (
           <button
             key={color}
             className="toolbar-btn color-swatch"
             onClick={() => handleColor(color)}
-            title={`Text Color: ${color}`}
+            title={`Text Color: ${name}`}
             style={{ 
               backgroundColor: color,
               width: '20px',
               height: '20px',
               borderRadius: '3px',
-              border: '1px solid var(--border-primary)',
+              border: color === '#ffffff' ? '1px solid #ccc' : '1px solid var(--border-primary)',
             }}
           />
         ))}
