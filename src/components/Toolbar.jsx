@@ -36,8 +36,6 @@ function Toolbar({ editor, splitMode, scrollSync, onToggleSplit, onToggleScrollS
     return editorInstance?.isActive(type, attrs) || false
   }
 
-  if (!editor) return null
-
   const handleFontFamily = (e) => {
     editor?.setFontFamily(e.target.value)
   }

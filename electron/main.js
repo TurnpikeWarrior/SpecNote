@@ -13,7 +13,7 @@ function createWindow() {
   const { width, height } = screen.getPrimaryDisplay().workAreaSize
 
   mainWindow = new BrowserWindow({
-    icon: path.join(__dirname, '../src/assets/icons/icon.png'),
+    icon: path.join(__dirname, '../src/assets/icons/SpecNote.png'),
     title: 'SpecNote',
     width: Math.min(1400, width - 100),
     height: Math.min(900, height - 100),
@@ -42,6 +42,10 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // Set dock icon on macOS
+  if (process.platform === 'darwin' && app.dock) {
+    app.dock.setIcon(path.join(__dirname, '../src/assets/icons/SpecNote.png'))
+  }
   // Set up macOS application menu with correct app name
   if (process.platform === 'darwin') {
     const template = [
