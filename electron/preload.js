@@ -19,6 +19,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
   onFormatParagraph: (callback) => ipcRenderer.on('format-paragraph', callback),
   onFormatBulletList: (callback) => ipcRenderer.on('format-bullet-list', callback),
   onFormatNumberedList: (callback) => ipcRenderer.on('format-numbered-list', callback),
+  onFormatIndentList: (callback) => ipcRenderer.on('format-indent-list', callback),
+  onFormatUnindentList: (callback) => ipcRenderer.on('format-unindent-list', callback),
 })
 
 contextBridge.exposeInMainWorld('versions', {

@@ -114,6 +114,9 @@ app.whenReady().then(() => {
           { type: 'separator' },
           { label: 'Bullet List', click: () => mainWindow?.webContents.send('format-bullet-list') },
           { label: 'Numbered List', click: () => mainWindow?.webContents.send('format-numbered-list') },
+          { type: 'separator' },
+          { label: 'Indent List Item (⌘])', click: () => mainWindow?.webContents.send('format-indent-list') },
+          { label: 'Unindent List Item (⌘[)', click: () => mainWindow?.webContents.send('format-unindent-list') },
         ]
       },
       {

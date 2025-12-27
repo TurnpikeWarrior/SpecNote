@@ -74,10 +74,6 @@ function App() {
     }
   }, [splitMode])
 
-  const getActiveEditor = useCallback(() => {
-    return activePane === 'left' ? leftEditorRef.current : rightEditorRef.current
-  }, [activePane])
-
   const handleSave = useCallback(() => {
     if (activePane === 'left') {
       saveLeftDoc()
@@ -121,6 +117,19 @@ function App() {
     { id: 'settings', label: 'Settings', shortcut: ['⌘', ','], action: () => setSettingsOpen(true), icon: 'settings' },
   ]
 
+  const getActiveEditor = useCallback(() => {
+    if (activePane === 'left') return leftEditorRef.current?.editor
+    return rightEditorRef.current?.editor
+  }, [activePane])
+
+  const handleIndentList = useCallback(() => {
+    getActiveEditor()?.chain().focus().sinkListItem('listItem').run()
+  }, [getActiveEditor])
+
+  const handleUnindentList = useCallback(() => {
+    getActiveEditor()?.chain().focus().liftListItem('listItem').run()
+  }, [getActiveEditor])
+
   useKeyboardShortcuts({
     onSave: handleSave,
     onNew: handleNewDocument,
@@ -135,6 +144,8 @@ function App() {
     onOpenCommandPalette: () => setCommandPaletteOpen(true),
     onSearch: () => setSearchOpen(prev => !prev),
     onSettings: () => setSettingsOpen(true),
+    onIndentList: handleIndentList,
+    onUnindentList: handleUnindentList,
   })
 
   // Listen for Electron menu events
@@ -151,11 +162,6 @@ function App() {
     api.onSetLineSpacing?.((value) => updateSettings({ lineSpacing: value }))
     
     // Format commands - apply to active editor
-    const getActiveEditor = () => {
-      if (activePane === 'left') return leftEditorRef.current?.editor
-      return rightEditorRef.current?.editor
-    }
-    
     api.onFormatBold?.(() => getActiveEditor()?.chain().focus().toggleBold().run())
     api.onFormatItalic?.(() => getActiveEditor()?.chain().focus().toggleItalic().run())
     api.onFormatUnderline?.(() => getActiveEditor()?.chain().focus().toggleUnderline().run())
@@ -163,7 +169,9 @@ function App() {
     api.onFormatParagraph?.(() => getActiveEditor()?.chain().focus().setParagraph().run())
     api.onFormatBulletList?.(() => getActiveEditor()?.chain().focus().toggleBulletList().run())
     api.onFormatNumberedList?.(() => getActiveEditor()?.chain().focus().toggleOrderedList().run())
-  }, [activePane, handleNewDocument, handleOpenDocument, handleSave, handleExportMd, handleExportTxt, toggleSplitView, updateSettings])
+    api.onFormatIndentList?.(() => getActiveEditor()?.chain().focus().sinkListItem('listItem').run())
+    api.onFormatUnindentList?.(() => getActiveEditor()?.chain().focus().liftListItem('listItem').run())
+  }, [activePane, handleNewDocument, handleOpenDocument, handleSave, handleExportMd, handleExportTxt, toggleSplitView, updateSettings, getActiveEditor])
 
   return (
     <div className="app">

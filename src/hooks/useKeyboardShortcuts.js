@@ -14,6 +14,8 @@ export function useKeyboardShortcuts({
   onOpenCommandPalette,
   onSearch,
   onSettings,
+  onIndentList,
+  onUnindentList,
 }) {
   const handleKeyDown = useCallback((e) => {
     const isMod = e.metaKey || e.ctrlKey
@@ -109,6 +111,20 @@ export function useKeyboardShortcuts({
       onSettings?.()
       return
     }
+
+    // Indent List: Cmd+]
+    if (isMod && e.key === ']') {
+      e.preventDefault()
+      onIndentList?.()
+      return
+    }
+
+    // Unindent List: Cmd+[
+    if (isMod && e.key === '[') {
+      e.preventDefault()
+      onUnindentList?.()
+      return
+    }
   }, [
     onSave,
     onNew,
@@ -123,6 +139,8 @@ export function useKeyboardShortcuts({
     onOpenCommandPalette,
     onSearch,
     onSettings,
+    onIndentList,
+    onUnindentList,
   ])
 
   useEffect(() => {

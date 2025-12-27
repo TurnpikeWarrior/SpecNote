@@ -9,6 +9,7 @@ import FontFamily from '@tiptap/extension-font-family'
 import Placeholder from '@tiptap/extension-placeholder'
 import Highlight from '@tiptap/extension-highlight'
 import { FontSize } from '../extensions/FontSize'
+import { sinkListItem, liftListItem } from '@tiptap/pm/schema-list'
 
 const Editor = forwardRef(({ 
   content, 
@@ -56,6 +57,30 @@ const Editor = forwardRef(({
           view.dispatch(view.state.tr.insertText(text))
           return true
         }
+        return false
+      },
+      handleKeyDown: (view, event) => {
+        const isMod = event.metaKey || event.ctrlKey
+        const { state, dispatch } = view
+        
+        // Indent list: Cmd+]
+        if (isMod && event.key === ']') {
+          const listItemType = state.schema.nodes.listItem
+          if (listItemType && sinkListItem(listItemType)(state, dispatch)) {
+            event.preventDefault()
+            return true
+          }
+        }
+        
+        // Unindent list: Cmd+[
+        if (isMod && event.key === '[') {
+          const listItemType = state.schema.nodes.listItem
+          if (listItemType && liftListItem(listItemType)(state, dispatch)) {
+            event.preventDefault()
+            return true
+          }
+        }
+        
         return false
       },
       attributes: {
