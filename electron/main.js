@@ -84,6 +84,39 @@ app.whenReady().then(() => {
         ]
       },
       {
+        label: 'Format',
+        submenu: [
+          { label: 'Bold', accelerator: 'CmdOrCtrl+B', click: () => mainWindow?.webContents.send('format-bold') },
+          { label: 'Italic', accelerator: 'CmdOrCtrl+I', click: () => mainWindow?.webContents.send('format-italic') },
+          { label: 'Underline', accelerator: 'CmdOrCtrl+U', click: () => mainWindow?.webContents.send('format-underline') },
+          { type: 'separator' },
+          {
+            label: 'Line Spacing',
+            submenu: [
+              { label: 'Single (1.0)', click: () => mainWindow?.webContents.send('set-line-spacing', 1.0) },
+              { label: 'Compact (1.2)', click: () => mainWindow?.webContents.send('set-line-spacing', 1.2) },
+              { label: 'Normal (1.4)', click: () => mainWindow?.webContents.send('set-line-spacing', 1.4) },
+              { label: 'Relaxed (1.5)', click: () => mainWindow?.webContents.send('set-line-spacing', 1.5) },
+              { label: 'Loose (1.75)', click: () => mainWindow?.webContents.send('set-line-spacing', 1.75) },
+              { label: 'Double (2.0)', click: () => mainWindow?.webContents.send('set-line-spacing', 2.0) },
+            ]
+          },
+          { type: 'separator' },
+          {
+            label: 'Heading',
+            submenu: [
+              { label: 'Heading 1', click: () => mainWindow?.webContents.send('format-heading', 1) },
+              { label: 'Heading 2', click: () => mainWindow?.webContents.send('format-heading', 2) },
+              { label: 'Heading 3', click: () => mainWindow?.webContents.send('format-heading', 3) },
+              { label: 'Paragraph', click: () => mainWindow?.webContents.send('format-paragraph') },
+            ]
+          },
+          { type: 'separator' },
+          { label: 'Bullet List', click: () => mainWindow?.webContents.send('format-bullet-list') },
+          { label: 'Numbered List', click: () => mainWindow?.webContents.send('format-numbered-list') },
+        ]
+      },
+      {
         label: 'View',
         submenu: [
           { label: 'Toggle Split View', accelerator: 'CmdOrCtrl+\\', click: () => mainWindow?.webContents.send('menu-toggle-split') },

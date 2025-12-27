@@ -7,6 +7,7 @@ const defaultSettings = {
   autosaveInterval: 30, // seconds
   showLineNumbers: false,
   defaultFontSize: '15px',
+  lineSpacing: 1.4, // 1.0 = single, 1.5 = 1.5x, 2.0 = double
 }
 
 export function useSettings() {

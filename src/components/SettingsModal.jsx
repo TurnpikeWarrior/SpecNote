@@ -74,6 +74,23 @@ function SettingsModal({ settings, onUpdate, onClose }) {
             </select>
           </div>
 
+          <div className="settings-group">
+            <label className="settings-label">Line Spacing</label>
+            <select
+              className="settings-input"
+              value={localSettings.lineSpacing}
+              onChange={e => handleChange('lineSpacing', parseFloat(e.target.value))}
+              style={{ width: '120px' }}
+            >
+              <option value="1.0">Single (1.0)</option>
+              <option value="1.2">Compact (1.2)</option>
+              <option value="1.4">Normal (1.4)</option>
+              <option value="1.5">Relaxed (1.5)</option>
+              <option value="1.75">Loose (1.75)</option>
+              <option value="2.0">Double (2.0)</option>
+            </select>
+          </div>
+
           <div className="settings-group" style={{ marginTop: '24px' }}>
             <button 
               className="toolbar-btn" 

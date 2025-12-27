@@ -41,6 +41,11 @@ function App() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  // Apply line spacing
+  useEffect(() => {
+    document.documentElement.style.setProperty('--editor-line-height', settings.lineSpacing)
+  }, [settings.lineSpacing])
+
   const toggleTheme = useCallback(() => {
     setTheme(prev => prev === 'light' ? 'dark' : 'light')
   }, [])
@@ -131,6 +136,34 @@ function App() {
     onSearch: () => setSearchOpen(prev => !prev),
     onSettings: () => setSettingsOpen(true),
   })
+
+  // Listen for Electron menu events
+  useEffect(() => {
+    if (!window.electronAPI) return
+
+    const api = window.electronAPI
+    api.onMenuNew?.(() => handleNewDocument())
+    api.onMenuOpen?.(() => handleOpenDocument())
+    api.onMenuSave?.(() => handleSave())
+    api.onMenuExportMd?.(() => handleExportMd())
+    api.onMenuExportTxt?.(() => handleExportTxt())
+    api.onMenuToggleSplit?.(() => toggleSplitView())
+    api.onSetLineSpacing?.((value) => updateSettings({ lineSpacing: value }))
+    
+    // Format commands - apply to active editor
+    const getActiveEditor = () => {
+      if (activePane === 'left') return leftEditorRef.current?.editor
+      return rightEditorRef.current?.editor
+    }
+    
+    api.onFormatBold?.(() => getActiveEditor()?.chain().focus().toggleBold().run())
+    api.onFormatItalic?.(() => getActiveEditor()?.chain().focus().toggleItalic().run())
+    api.onFormatUnderline?.(() => getActiveEditor()?.chain().focus().toggleUnderline().run())
+    api.onFormatHeading?.((level) => getActiveEditor()?.chain().focus().toggleHeading({ level }).run())
+    api.onFormatParagraph?.(() => getActiveEditor()?.chain().focus().setParagraph().run())
+    api.onFormatBulletList?.(() => getActiveEditor()?.chain().focus().toggleBulletList().run())
+    api.onFormatNumberedList?.(() => getActiveEditor()?.chain().focus().toggleOrderedList().run())
+  }, [activePane, handleNewDocument, handleOpenDocument, handleSave, handleExportMd, handleExportTxt, toggleSplitView, updateSettings])
 
   return (
     <div className="app">
