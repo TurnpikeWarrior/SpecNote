@@ -198,26 +198,6 @@ function Toolbar({ editor, splitMode, scrollSync, onToggleSplit, onToggleScrollS
 
       <div className="toolbar-divider" />
 
-      {/* Undo/Redo */}
-      <div className="toolbar-group">
-        <button
-          className="toolbar-btn"
-          onClick={() => editor?.undo()}
-          title="Undo (⌘Z)"
-        >
-          <UndoIcon />
-        </button>
-        <button
-          className="toolbar-btn"
-          onClick={() => editor?.redo()}
-          title="Redo (⌘⇧Z)"
-        >
-          <RedoIcon />
-        </button>
-      </div>
-
-      <div className="toolbar-divider" />
-
       {/* Split View Controls */}
       <div className="toolbar-group">
         <button
